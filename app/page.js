@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Hero from '@/components/Hero';
 import DestinationSection from '@/components/DestinationSection';
 import { indiaDestinations, internationalDestinations } from '@/data/destinations';
-import { Compass, ShieldCheck, HeartHandshake, PhoneCall, Sparkles } from 'lucide-react';
+import { Compass, ShieldCheck, HeartHandshake, PhoneCall, Plane } from 'lucide-react';
 
 export const metadata = {
   title: 'Travel Unbounded | Experiential Travel Experts',
@@ -91,7 +91,7 @@ export default function HomePage() {
         <div className="bg-gradient-to-r from-teal-800 to-slate-900 rounded-3xl p-8 sm:p-12 text-white relative overflow-hidden shadow-2xl">
           <div className="relative z-10 max-w-2xl space-y-4">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-teal-300 text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" /> Ready to travel?
+              <Plane className="w-3.5 h-3.5 text-teal-300" /> Ready to travel?
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
               Start Planning Your Bespoke Holiday Today

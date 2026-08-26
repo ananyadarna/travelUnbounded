@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Sparkles, ShieldCheck, Compass } from 'lucide-react';
+import { ArrowRight, Compass, ShieldCheck, Globe } from 'lucide-react';
 
 export default function Hero() {
   return (
@@ -21,7 +21,7 @@ export default function Hero() {
           
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/20 border border-teal-400/30 text-teal-300 text-xs font-semibold uppercase tracking-wider backdrop-blur-md">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <Globe className="w-3.5 h-3.5 text-teal-400" />
             Experiential & Curated Safaris
           </div>
 
