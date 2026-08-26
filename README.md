@@ -4,6 +4,14 @@ Production-style travel company web application built for **Travel Unbounded** t
 
 ---
 
+## Live Links & Submissions
+
+* **Live Deployed Application:** [https://travel-unbounded-delta-lac.vercel.app](https://travel-unbounded-delta-lac.vercel.app)
+* **Live API Enquiries Endpoint:** [https://travel-unbounded-delta-lac.vercel.app/api/enquiry](https://travel-unbounded-delta-lac.vercel.app/api/enquiry)
+* **GitHub Repository:** [https://github.com/ananyadarna/travelUnbounded](https://github.com/ananyadarna/travelUnbounded)
+
+---
+
 ## Tech Stack
 
 * **Frontend:** Next.js (App Router), React 19, Tailwind CSS
@@ -115,6 +123,9 @@ Submits and validates a travel booking enquiry, persisting it into MongoDB.
   "message": "Travel date must be a valid future date"
 }
 ```
+
+### `GET /api/enquiry`
+Retrieves list of all submitted travel enquiries.
 
 ---
 
