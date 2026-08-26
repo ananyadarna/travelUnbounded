@@ -173,7 +173,7 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto px-4 text-center">
         <Link
           href="/contact"
-          className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-sm shadow-lg shadow-teal-700/20 transition-all hover:scale-105"
+          className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-sm shadow-lg shadow-teal-700/20 transition-colors"
         >
           Plan Your Next Journey
           <ArrowRight className="w-4 h-4" />

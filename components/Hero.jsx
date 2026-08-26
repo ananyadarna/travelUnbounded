@@ -6,9 +6,9 @@ export default function Hero() {
   return (
     <div className="relative bg-slate-900 overflow-hidden text-white min-h-[560px] flex items-center">
       
-      {/* Background Hero Image Overlay */}
+      {/* Background Hero Image */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40 mix-blend-luminosity scale-105 transform hover:scale-100 transition-transform duration-1000"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40 mix-blend-luminosity scale-105"
         style={{
           backgroundImage: `url('https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1920&q=80')`
         }}
@@ -40,7 +40,7 @@ export default function Hero() {
           <div className="pt-4 flex flex-wrap gap-4 items-center">
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-7 py-4 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-base shadow-xl shadow-teal-600/30 hover:shadow-teal-500/40 hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center gap-2 px-7 py-4 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-base shadow-xl shadow-teal-600/30 hover:shadow-teal-500/40 transition-colors"
             >
               Plan Your Trip
               <ArrowRight className="w-5 h-5" />
@@ -48,7 +48,7 @@ export default function Hero() {
 
             <Link
               href="#destinations"
-              className="inline-flex items-center gap-2 px-6 py-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-base backdrop-blur-md border border-white/20 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-4 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-base backdrop-blur-md border border-white/20 transition-colors"
             >
               <Compass className="w-5 h-5 text-teal-300" />
               Explore Destinations
