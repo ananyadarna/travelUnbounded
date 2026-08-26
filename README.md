@@ -8,7 +8,17 @@ Production-style travel company web application built for **Travel Unbounded** t
 
 * **Live Deployed Application:** [https://travel-unbounded-delta-lac.vercel.app](https://travel-unbounded-delta-lac.vercel.app)
 * **Live API Enquiries Endpoint:** [https://travel-unbounded-delta-lac.vercel.app/api/enquiry](https://travel-unbounded-delta-lac.vercel.app/api/enquiry)
+* **Video Recording Demo Link:** [https://drive.google.com/file/d/1arh-SLkqyLd-OGc62cUr3QM74ONdGdqJ/view?usp=drive_link](https://drive.google.com/file/d/1arh-SLkqyLd-OGc62cUr3QM74ONdGdqJ/view?usp=drive_link)
 * **GitHub Repository:** [https://github.com/ananyadarna/travelUnbounded](https://github.com/ananyadarna/travelUnbounded)
+
+---
+
+## Core Application Workflow
+
+1. **Homepage & Trips Showcase:** Browse hand-picked domestic packages (Kerala, Himachal, Ladakh, Andaman, Goa) and international safaris (Kenya, Vietnam, Tanzania, Iceland, Sri Lanka).
+2. **About Us & Global Footprint:** Explore the company story, core service pillars, and office hubs in **Bengaluru (HQ)**, **Kochi**, and **Nairobi**.
+3. **Booking Form & Live Validation:** Interactive form featuring real-time input error checking (email regex, valid phone numbers, future travel date validation), disabled loading button, and a green success confirmation UI.
+4. **Backend API & MongoDB Data Persistence:** Server-validated `POST /api/enquiry` serverless endpoint persisting records to MongoDB Atlas with `createdAt` timestamps, and `GET /api/enquiry` list endpoint.
 
 ---
 
