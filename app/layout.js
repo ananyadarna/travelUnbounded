@@ -1,6 +1,7 @@
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import AIChatbotWidget from '@/components/AIChatbotWidget';
 
 export const metadata = {
   title: 'Travel Unbounded | Experiential Travel Experts',
@@ -15,6 +16,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <AIChatbotWidget />
       </body>
     </html>
   );
