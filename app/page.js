@@ -4,13 +4,35 @@ import Hero from '@/components/Hero';
 import DestinationSection from '@/components/DestinationSection';
 import { indiaDestinations, internationalDestinations } from '@/data/destinations';
 import { Compass, ShieldCheck, HeartHandshake, PhoneCall, Plane } from 'lucide-react';
+import connectDB from '@/lib/mongodb';
+import Destination from '@/models/Destination';
 
 export const metadata = {
   title: 'Travel Unbounded | Experiential Travel Experts',
   description: 'Explore curated travel packages for India and top international destinations. Personal vetted experiences, authentic itineraries, and 24x7 support.',
 };
 
-export default function HomePage() {
+async function getDestinations() {
+  try {
+    await connectDB();
+    const docs = await Destination.find({ isFeatured: true }).sort({ createdAt: -1 });
+    if (docs && docs.length > 0) {
+      const india = docs.filter((d) => d.category === 'India');
+      const international = docs.filter((d) => d.category === 'International');
+      return {
+        india: india.length > 0 ? india : indiaDestinations,
+        international: international.length > 0 ? international : internationalDestinations,
+      };
+    }
+  } catch (err) {
+    console.warn('DB fetch fallback to static destinations:', err.message);
+  }
+  return { india: indiaDestinations, international: internationalDestinations };
+}
+
+export default async function HomePage() {
+  const { india, international } = await getDestinations();
+
   return (
     <div className="space-y-12 pb-20">
       
@@ -73,7 +95,7 @@ export default function HomePage() {
           badgeText="Domestic Getaways"
           title="Explore Incredible India"
           subtitle="From Kerala's peaceful backwaters to Ladakh's high mountain passes, experience hand-picked Indian destinations."
-          destinations={indiaDestinations}
+          destinations={india}
         />
 
         {/* International Destinations Grid */}
@@ -82,7 +104,7 @@ export default function HomePage() {
           badgeText="World Expeditions"
           title="Popular International Destinations"
           subtitle="Immerse yourself in wildlife safaris, tropical coasts, and northern lights across world-famous travel spots."
-          destinations={internationalDestinations}
+          destinations={international}
         />
       </div>
 
