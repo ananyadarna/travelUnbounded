@@ -7,6 +7,9 @@ import { Compass, ShieldCheck, HeartHandshake, PhoneCall, Plane } from 'lucide-r
 import connectDB from '@/lib/mongodb';
 import Destination from '@/models/Destination';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = {
   title: 'Travel Unbounded | Experiential Travel Experts',
   description: 'Explore curated travel packages for India and top international destinations. Personal vetted experiences, authentic itineraries, and 24x7 support.',
