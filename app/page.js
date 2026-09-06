@@ -30,13 +30,15 @@ async function getDestinations() {
     console.warn('DB fetch fallback to static destinations:', err.message);
   }
 
+  const getTitle = (item) => (item?.title || item?.name || '').toLowerCase();
+
   // Merge static default destinations with database custom destinations (preventing title duplicates)
-  const existingIndiaTitles = new Set(dbIndia.map((d) => d.title.toLowerCase()));
-  const filteredStaticIndia = indiaDestinations.filter((d) => !existingIndiaTitles.has(d.title.toLowerCase()));
+  const existingIndiaTitles = new Set(dbIndia.map((d) => getTitle(d)));
+  const filteredStaticIndia = indiaDestinations.filter((d) => !existingIndiaTitles.has(getTitle(d)));
   const mergedIndia = [...dbIndia, ...filteredStaticIndia];
 
-  const existingIntlTitles = new Set(dbInternational.map((d) => d.title.toLowerCase()));
-  const filteredStaticIntl = internationalDestinations.filter((d) => !existingIntlTitles.has(d.title.toLowerCase()));
+  const existingIntlTitles = new Set(dbInternational.map((d) => getTitle(d)));
+  const filteredStaticIntl = internationalDestinations.filter((d) => !existingIntlTitles.has(getTitle(d)));
   const mergedInternational = [...dbInternational, ...filteredStaticIntl];
 
   return {
