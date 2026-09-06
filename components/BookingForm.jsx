@@ -8,6 +8,9 @@ import LoadingSpinner from './LoadingSpinner';
 export default function BookingForm() {
   const searchParams = useSearchParams();
   const initialDestination = searchParams ? searchParams.get('destination') : '';
+  const itineraryId = searchParams ? searchParams.get('itineraryId') : '';
+
+  const [attachedItinerary, setAttachedItinerary] = useState(null);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -19,6 +22,7 @@ export default function BookingForm() {
     hotelCategory: 'Deluxe',
     numberOfChildren: 0,
     preferredDestination: initialDestination || '',
+    itineraryId: itineraryId || '',
   });
 
   const [errors, setErrors] = useState({});
@@ -35,12 +39,32 @@ export default function BookingForm() {
     setMinDateString(tomorrow.toISOString().split('T')[0]);
   }, []);
 
-  // Update destination state if URL query param changes
+  // Fetch attached itinerary if itineraryId is present in URL
   useEffect(() => {
-    if (initialDestination) {
+    if (itineraryId) {
+      async function loadItinerary() {
+        try {
+          const res = await fetch(`/api/itinerary/${itineraryId}`);
+          const data = await res.json();
+          if (data.success && data.data) {
+            setAttachedItinerary(data.data);
+            setFormData((prev) => ({
+              ...prev,
+              itineraryId: data.data._id,
+              preferredDestination: data.data.destination || prev.preferredDestination,
+              numberOfPeople: data.data.preferences?.numberOfAdults || prev.numberOfPeople,
+              numberOfChildren: data.data.preferences?.numberOfChildren || prev.numberOfChildren,
+            }));
+          }
+        } catch (err) {
+          console.warn('Could not load itinerary params:', err);
+        }
+      }
+      loadItinerary();
+    } else if (initialDestination) {
       setFormData((prev) => ({ ...prev, preferredDestination: initialDestination }));
     }
-  }, [initialDestination]);
+  }, [itineraryId, initialDestination]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -161,6 +185,18 @@ export default function BookingForm() {
           Fill out your travel details below. Our travel team will contact you with a tailored itinerary.
         </p>
       </div>
+
+      {/* Attached AI Itinerary Banner */}
+      {attachedItinerary && (
+        <div className="bg-teal-50 border border-teal-200 text-teal-900 p-4 rounded-2xl flex items-start justify-between gap-3 shadow-xs">
+          <div className="space-y-1">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-teal-700 block">Attached Custom AI Itinerary</span>
+            <h4 className="font-bold text-sm text-slate-900">{attachedItinerary.title}</h4>
+            <p className="text-xs text-slate-600 font-medium">Est. Price: {attachedItinerary.estimatedCost} • Destination: {attachedItinerary.destination}</p>
+          </div>
+          <span className="px-2.5 py-1 bg-teal-700 text-white font-bold text-[10px] rounded-lg shrink-0">Attached</span>
+        </div>
+      )}
 
       {/* Success Banner */}
       {successMessage && (

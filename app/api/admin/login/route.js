@@ -5,7 +5,7 @@ export async function POST(request) {
     const { email, password } = await request.json();
 
     const validEmail = process.env.ADMIN_EMAIL || 'admin@travelunbounded.com';
-    const validPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    const validPassword = process.env.ADMIN_PASSWORD || 'Password123!';
 
     if (email === validEmail && password === validPassword) {
       const response = NextResponse.json({
@@ -17,7 +17,7 @@ export async function POST(request) {
       response.cookies.set('admin_token', 'authenticated', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'lax',
         maxAge: 60 * 60 * 24, // 24 hours
         path: '/',
       });

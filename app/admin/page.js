@@ -36,14 +36,25 @@ export default function AdminDashboardPage() {
     highlights: '',
   });
 
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
   useEffect(() => {
-    // Auth check: if not authenticated, redirect to /admin/login
-    if (!document.cookie.includes('admin_token=authenticated')) {
-      router.push('/admin/login');
-      return;
+    async function verifyAuth() {
+      try {
+        const res = await fetch('/api/admin/check-auth');
+        const data = await res.json();
+        if (res.ok && data.authenticated) {
+          setIsAuthorized(true);
+          fetchLeads();
+          fetchDestinations();
+        } else {
+          router.push('/admin/login');
+        }
+      } catch (err) {
+        router.push('/admin/login');
+      }
     }
-    fetchLeads();
-    fetchDestinations();
+    verifyAuth();
   }, [router]);
 
   const fetchLeads = async () => {
@@ -204,6 +215,14 @@ export default function AdminDashboardPage() {
   const closedCount = enquiries.filter((e) => e.status === 'Closed').length;
   const conversionRate = totalLeads > 0 ? Math.round((convertedCount / totalLeads) * 100) : 0;
   const estPipelineRevenue = totalLeads * 45000;
+
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 pb-20">
@@ -371,6 +390,7 @@ export default function AdminDashboardPage() {
                       <tr>
                         <th className="p-4">Submission Date</th>
                         <th className="p-4">Traveler Name</th>
+                        <th className="p-4">Target Package</th>
                         <th className="p-4">Contact Info</th>
                         <th className="p-4">Travel Date</th>
                         <th className="p-4">Party Size</th>
@@ -395,6 +415,10 @@ export default function AdminDashboardPage() {
                                   AI Itinerary
                                 </span>
                               )}
+                            </td>
+
+                            <td className="p-4 whitespace-nowrap font-bold text-teal-800">
+                              {e.preferredDestination || (e.itineraryDetails ? e.itineraryDetails.destination : 'Custom Travel')}
                             </td>
 
                             <td className="p-4 whitespace-nowrap space-y-0.5">

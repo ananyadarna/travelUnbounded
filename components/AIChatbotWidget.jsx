@@ -250,11 +250,15 @@ export default function AIChatbotWidget() {
                     <label className="text-slate-400 font-medium block mb-1">Trip Duration (Days):</label>
                     <input
                       type="number"
-                      min="2"
-                      max="14"
+                      min="1"
+                      max="30"
                       value={preferences.durationDays}
-                      onChange={(e) => setPreferences({ ...preferences, durationDays: Number(e.target.value) })}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white font-bold focus:border-teal-400 focus:outline-none"
+                      onFocus={(e) => e.target.select()}
+                      onChange={(e) => {
+                        const val = e.target.value === '' ? '' : Math.max(1, parseInt(e.target.value, 10) || 1);
+                        setPreferences({ ...preferences, durationDays: val });
+                      }}
+                      className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white font-bold focus:border-teal-400 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                   </div>
 
@@ -266,8 +270,12 @@ export default function AIChatbotWidget() {
                         min="1"
                         max="20"
                         value={preferences.adults}
-                        onChange={(e) => setPreferences({ ...preferences, adults: Number(e.target.value) })}
-                        className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white font-bold focus:border-teal-400 focus:outline-none"
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => {
+                          const val = e.target.value === '' ? '' : Math.max(1, parseInt(e.target.value, 10) || 1);
+                          setPreferences({ ...preferences, adults: val });
+                        }}
+                        className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white font-bold focus:border-teal-400 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                     </div>
                     <div>
@@ -277,8 +285,12 @@ export default function AIChatbotWidget() {
                         min="0"
                         max="10"
                         value={preferences.children}
-                        onChange={(e) => setPreferences({ ...preferences, children: Number(e.target.value) })}
-                        className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white font-bold focus:border-teal-400 focus:outline-none"
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => {
+                          const val = e.target.value === '' ? '' : Math.max(0, parseInt(e.target.value, 10) || 0);
+                          setPreferences({ ...preferences, children: val });
+                        }}
+                        className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-white font-bold focus:border-teal-400 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       />
                     </div>
                   </div>

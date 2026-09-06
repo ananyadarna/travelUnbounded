@@ -41,6 +41,11 @@ const EnquirySchema = new mongoose.Schema({
     default: 0,
     min: [0, 'Number of children cannot be negative'],
   },
+  preferredDestination: {
+    type: String,
+    default: '',
+    trim: true,
+  },
   status: {
     type: String,
     enum: ['New', 'Contacted', 'Converted', 'Closed'],

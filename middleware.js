@@ -4,7 +4,7 @@ export function middleware(request) {
   const path = request.nextUrl.pathname;
 
   // Protect /admin routes (except /admin/login)
-  if (path.startsWith('/admin') && path !== '/admin/login') {
+  if ((path === '/admin' || path.startsWith('/admin/')) && path !== '/admin/login') {
     const adminToken = request.cookies.get('admin_token')?.value;
 
     if (!adminToken || adminToken !== 'authenticated') {
@@ -17,5 +17,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin', '/admin/:path*'],
 };

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import Enquiry from '@/models/Enquiry';
+import Itinerary from '@/models/Itinerary';
 
 /**
  * POST /api/enquiry
@@ -18,6 +19,8 @@ export async function POST(request) {
       numberOfPeople,
       hotelCategory,
       numberOfChildren = 0,
+      preferredDestination = '',
+      itineraryId = null,
     } = body;
 
     // 1. Server-side Input Validation
@@ -84,7 +87,7 @@ export async function POST(request) {
       );
     }
 
-    // 2. Connect to Database & Persist Record
+    // 2. Connect to Database & Fetch Attached Itinerary if present
     try {
       await connectToDatabase();
     } catch (dbError) {
@@ -93,6 +96,18 @@ export async function POST(request) {
         { success: false, message: 'Database connection failed. Please try again later.' },
         { status: 500 }
       );
+    }
+
+    let itineraryDetails = null;
+    if (itineraryId) {
+      try {
+        const foundItinerary = await Itinerary.findById(itineraryId);
+        if (foundItinerary) {
+          itineraryDetails = foundItinerary;
+        }
+      } catch (iErr) {
+        console.warn('Itinerary fetch warning:', iErr.message);
+      }
     }
 
     const newEnquiry = await Enquiry.create({
@@ -104,6 +119,10 @@ export async function POST(request) {
       numberOfPeople: peopleCount,
       hotelCategory,
       numberOfChildren: childrenCount,
+      preferredDestination: preferredDestination.trim(),
+      status: 'New',
+      itineraryId: itineraryId || null,
+      itineraryDetails,
       createdAt: new Date(),
     });
 
@@ -111,12 +130,7 @@ export async function POST(request) {
       {
         success: true,
         message: 'Enquiry submitted successfully',
-        data: {
-          id: newEnquiry._id,
-          fullName: newEnquiry.fullName,
-          email: newEnquiry.email,
-          createdAt: newEnquiry.createdAt,
-        },
+        data: newEnquiry,
       },
       { status: 201 }
     );
@@ -130,18 +144,19 @@ export async function POST(request) {
 }
 
 /**
- * GET /api/enquiry (Bonus Endpoint)
+ * GET /api/enquiry
  * Retrieves list of stored travel enquiries for administrative verification
  */
 export async function GET() {
   try {
     await connectToDatabase();
-    const enquiries = await Enquiry.find({}).sort({ createdAt: -1 }).limit(50);
+    const enquiries = await Enquiry.find({}).sort({ createdAt: -1 }).limit(100);
 
     return NextResponse.json(
       {
         success: true,
         count: enquiries.length,
+        data: enquiries,
         enquiries,
       },
       { status: 200 }

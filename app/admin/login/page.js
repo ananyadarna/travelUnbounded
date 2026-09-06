@@ -7,7 +7,7 @@ import { ShieldCheck, Lock, Mail, ArrowRight } from 'lucide-react';
 export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('admin@travelunbounded.com');
-  const [password, setPassword] = useState('admin123');
+  const [password, setPassword] = useState('Password123!');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -101,7 +101,7 @@ export default function AdminLoginPage() {
 
         <div className="pt-4 border-t border-slate-100 text-center">
           <p className="text-[11px] text-slate-500">
-            Demo Access: <span className="text-teal-800 font-mono font-semibold">admin@travelunbounded.com / admin123</span>
+            Demo Access: <span className="text-teal-800 font-mono font-semibold">admin@travelunbounded.com / Password123!</span>
           </p>
         </div>
 
