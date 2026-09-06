@@ -16,21 +16,33 @@ export const metadata = {
 };
 
 async function getDestinations() {
+  let dbIndia = [];
+  let dbInternational = [];
+
   try {
     await connectDB();
-    const docs = await Destination.find({ isFeatured: true }).sort({ createdAt: -1 });
+    const docs = await Destination.find({ isFeatured: true }).lean().sort({ createdAt: -1 });
     if (docs && docs.length > 0) {
-      const india = docs.filter((d) => d.category === 'India');
-      const international = docs.filter((d) => d.category === 'International');
-      return {
-        india: india.length > 0 ? india : indiaDestinations,
-        international: international.length > 0 ? international : internationalDestinations,
-      };
+      dbIndia = docs.filter((d) => d.category === 'India');
+      dbInternational = docs.filter((d) => d.category === 'International');
     }
   } catch (err) {
     console.warn('DB fetch fallback to static destinations:', err.message);
   }
-  return { india: indiaDestinations, international: internationalDestinations };
+
+  // Merge static default destinations with database custom destinations (preventing title duplicates)
+  const existingIndiaTitles = new Set(dbIndia.map((d) => d.title.toLowerCase()));
+  const filteredStaticIndia = indiaDestinations.filter((d) => !existingIndiaTitles.has(d.title.toLowerCase()));
+  const mergedIndia = [...dbIndia, ...filteredStaticIndia];
+
+  const existingIntlTitles = new Set(dbInternational.map((d) => d.title.toLowerCase()));
+  const filteredStaticIntl = internationalDestinations.filter((d) => !existingIntlTitles.has(d.title.toLowerCase()));
+  const mergedInternational = [...dbInternational, ...filteredStaticIntl];
+
+  return {
+    india: mergedIndia,
+    international: mergedInternational,
+  };
 }
 
 export default async function HomePage() {
