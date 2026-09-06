@@ -41,6 +41,24 @@ const EnquirySchema = new mongoose.Schema({
     default: 0,
     min: [0, 'Number of children cannot be negative'],
   },
+  status: {
+    type: String,
+    enum: ['New', 'Contacted', 'Converted', 'Closed'],
+    default: 'New',
+  },
+  notes: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  itineraryId: {
+    type: String,
+    default: null,
+  },
+  itineraryDetails: {
+    type: Object,
+    default: null,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
