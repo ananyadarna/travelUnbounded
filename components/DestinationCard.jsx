@@ -6,7 +6,21 @@ export default function DestinationCard({ destination }) {
   // Support both dynamic DB objects (title, location, price) and static data objects (name, country, formattedPrice)
   const cardTitle = destination.title || destination.name;
   const cardLocation = destination.location || destination.country;
-  const cardPrice = destination.price || (destination.formattedPrice ? `Starting from ${destination.formattedPrice}` : '');
+  
+  const getFormattedPrice = () => {
+    if (typeof destination.price === 'string' && destination.price.trim().length > 0) {
+      return destination.price;
+    }
+    if (destination.formattedPrice) {
+      return `${destination.formattedPrice} per person`;
+    }
+    if (typeof destination.price === 'number') {
+      return `₹${destination.price.toLocaleString('en-IN')} per person`;
+    }
+    return 'Custom Quote';
+  };
+
+  const cardPrice = getFormattedPrice();
   const image = destination.image;
   const description = destination.description;
   const highlights = destination.highlights || [];
