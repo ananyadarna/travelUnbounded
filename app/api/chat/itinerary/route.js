@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Itinerary from '@/models/Itinerary';
 
-// Smart itinerary generator
+// Smart local itinerary generator (used as fallback when OPENAI_API_KEY is not set)
 function generateFallbackItinerary(prefs) {
   const { destinationType, travelStyle, budgetCategory, durationDays = 5, adults = 2, children = 0 } = prefs;
 
@@ -82,9 +82,64 @@ export async function POST(request) {
     const body = await request.json();
     const { destinationType, travelStyle, budgetCategory, durationDays, adults, children } = body;
 
-    const itineraryData = generateFallbackItinerary(body);
+    let itineraryData = null;
 
-    // Save itinerary to MongoDB
+    // 1. OpenAI API integration
+    const openAiApiKey = process.env.OPENAI_API_KEY;
+    if (openAiApiKey) {
+      try {
+        const prompt = `Create a custom ${durationDays}-day travel itinerary for ${destinationType || 'India'} tailored for ${adults || 2} adults and ${children || 0} kids with budget ${budgetCategory || 'Mid-Range'} and travel style ${travelStyle || 'Experiential'}.
+Return ONLY raw JSON with this exact schema:
+{
+  "title": "Short title",
+  "destination": "Location name",
+  "summary": "Brief summary",
+  "estimatedCost": "Total price with currency",
+  "stayCategory": "Hotel category",
+  "dayWisePlan": [
+    {
+      "day": 1,
+      "title": "Day title",
+      "morning": "Morning activity",
+      "afternoon": "Afternoon activity",
+      "evening": "Evening activity",
+      "highlight": "Day highlight"
+    }
+  ]
+}`;
+
+        const aiRes = await fetch('https://api.openai.com/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${openAiApiKey}`,
+          },
+          body: JSON.stringify({
+            model: 'gpt-4o-mini',
+            messages: [
+              { role: 'system', content: 'You are an expert travel planner for Travel Unbounded. Return ONLY valid JSON without markdown formatting.' },
+              { role: 'user', content: prompt }
+            ],
+            temperature: 0.7,
+          }),
+        });
+
+        if (aiRes.ok) {
+          const aiJson = await aiRes.json();
+          const content = aiJson.choices[0].message.content.replace(/```json|```/g, '').trim();
+          itineraryData = JSON.parse(content);
+        }
+      } catch (openAiErr) {
+        console.warn('OpenAI API call failed, falling back:', openAiErr.message);
+      }
+    }
+
+    // 2. Fallback to smart generator if no OpenAI key is set or call fails
+    if (!itineraryData) {
+      itineraryData = generateFallbackItinerary(body);
+    }
+
+    // Save generated itinerary to MongoDB
     await connectDB();
     const savedItinerary = await Itinerary.create({
       title: itineraryData.title,
