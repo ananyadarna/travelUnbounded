@@ -1,33 +1,48 @@
-# Travel Unbounded — Full Stack Web Application (Phase 1)
+# Travel Unbounded — Full Stack Web Application (Phase 1 & Phase 2)
 
-Production-style travel company web application built for **Travel Unbounded** to showcase experiential destination packages, company heritage, global office locations, and capture travel booking enquiries with real-time validation and MongoDB persistence.
+Production-style travel company web application built for **Travel Unbounded** to showcase experiential destination packages, company heritage, global office locations, and capture travel booking enquiries with real-time validation, dynamic CMS catalog management, AI itinerary planning, and MongoDB persistence.
 
 ---
 
 ## Live Links & Submissions
 
 * **Live Deployed Application:** [https://travel-unbounded-delta-lac.vercel.app](https://travel-unbounded-delta-lac.vercel.app)
+* **Admin Operations Portal:** [https://travel-unbounded-delta-lac.vercel.app/admin/login](https://travel-unbounded-delta-lac.vercel.app/admin/login)
 * **Live API Enquiries Endpoint:** [https://travel-unbounded-delta-lac.vercel.app/api/enquiry](https://travel-unbounded-delta-lac.vercel.app/api/enquiry)
-* **Video Recording Demo Link:** [https://drive.google.com/file/d/1arh-SLkqyLd-OGc62cUr3QM74ONdGdqJ/view?usp=drive_link](https://drive.google.com/file/d/1arh-SLkqyLd-OGc62cUr3QM74ONdGdqJ/view?usp=drive_link)
 * **GitHub Repository:** [https://github.com/ananyadarna/travelUnbounded](https://github.com/ananyadarna/travelUnbounded)
 
 ---
 
-## Core Application Workflow
+## Core Application Features
 
-1. **Homepage & Trips Showcase:** Browse hand-picked domestic packages (Kerala, Himachal, Ladakh, Andaman, Goa) and international safaris (Kenya, Vietnam, Tanzania, Iceland, Sri Lanka).
-2. **About Us & Global Footprint:** Explore the company story, core service pillars, and office hubs in **Bengaluru (HQ)**, **Kochi**, and **Nairobi**.
-3. **Booking Form & Live Validation:** Interactive form featuring real-time input error checking (email regex, valid phone numbers, future travel date validation), disabled loading button, and a green success confirmation UI.
-4. **Backend API & MongoDB Data Persistence:** Server-validated `POST /api/enquiry` serverless endpoint persisting records to MongoDB Atlas with `createdAt` timestamps, and `GET /api/enquiry` list endpoint.
+### Phase 1 — Core Platform
+1. **Homepage & Destinations Showcase:** Browse curated domestic packages (Kerala, Himachal, Ladakh, Andaman, Goa) and international safaris (Kenya, Vietnam, Tanzania, Iceland, Sri Lanka).
+2. **About Us & Global Footprint:** Company story, core service pillars, and office hubs in **Bengaluru (HQ)**, **Kochi**, and **Nairobi**.
+3. **Booking Form & Live Validation:** Interactive form featuring real-time input error checking (email regex, phone validation, future travel date validation), disabled loading button, and green UI success confirmation.
+4. **Backend API & MongoDB Persistence:** Server-validated `POST /api/enquiry` endpoint persisting records to MongoDB Atlas with `createdAt` timestamps, and `GET /api/enquiry` list endpoint.
+
+### Phase 2 — Operations Suite & CMS
+1. **Admin Operations Portal (`/admin`):** Authenticated executive portal protected by `/api/admin/login` and `/api/admin/check-auth` session management.
+2. **Lead & Operations Management:**
+   * Live metric cards (*Total Submissions*, *New Action Required*, *Converted Leads*, *Conversion Rate*).
+   * Search by customer name, email, or phone number.
+   * Filter leads by status (*New*, *Contacted*, *Converted*, *Closed*).
+   * Dynamic inline lead status updates.
+   * View attached customer AI itineraries in an interactive modal inspector.
+   * **One-Click CSV Export** to download lead database tables for team operations.
+3. **Live Destination Catalog CMS:** Add, edit pricing/duration/details, or delete travel packages live on site without code changes, persisting directly to MongoDB.
+4. **Performance & Funnel Analytics:** Financial pipeline revenue estimation, conversion rate tracking, and status funnel progress bars.
+5. **Interactive AI Trip Planner Widget:** Floating chatbot widget allowing travelers to select destination regions (*Incredible India* or *World Expeditions*), travel styles, and trip duration to generate day-by-day itineraries attached directly to booking enquiries.
 
 ---
 
 ## Tech Stack
 
-* **Frontend:** Next.js (App Router), React 19, Tailwind CSS
+* **Frontend:** Next.js 14 (App Router), React 19, Tailwind CSS
 * **Icons & UI:** Lucide React (`lucide-react`)
-* **Backend API:** Next.js Serverless API Routes (`POST /api/enquiry`, `GET /api/enquiry`)
+* **Backend API:** Next.js Serverless API Routes (`/api/enquiry`, `/api/admin/login`, `/api/admin/check-auth`, `/api/admin/destinations`)
 * **Database:** MongoDB Atlas (Mongoose ODM with cached connection helper)
+* **Deployment:** Vercel (Dynamic SSR rendering)
 * **Language:** JavaScript / ES2024
 
 ---
@@ -51,45 +66,15 @@ npm install
 Create a `.env.local` file in the root directory:
 ```env
 MONGODB_URI=your_mongodb_atlas_connection_string
+ADMIN_EMAIL=admin@travelunbounded.com
+ADMIN_PASSWORD=Password123!
 ```
-*(Refer to `.env.example` for the environment template).*
 
 ### 4. Run Development Server
 ```bash
 npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## Core Features & Pages
-
-### 1. Home Page (`/`)
-* **Hero Banner:** Full-width responsive banner featuring company positioning (*"India's Most Trusted Experiential Travel Experts"*) and a quick Call-to-Action.
-* **India Destinations Section:** 5 curated Indian destinations (Kerala, Himachal Pradesh, Ladakh, Andaman, Goa) displayed as responsive cards with starting price badges.
-* **International Destinations Section:** 5 global destinations (Kenya, Vietnam, Tanzania, Iceland, Sri Lanka) with highlight badges.
-* **Responsive Grid:** Reflows from 5 columns (desktop) to 2-3 columns (tablet) down to 1 column (mobile).
-
-### 2. About Page (`/about`)
-* **Company Heritage:** Official company story detailing experiential travel philosophy.
-* **Why Choose Us:** 4 value pillars (Personally Vetted Stays, Native Local Guides, Tailor-Made Itineraries, 24x7 Concierge).
-* **Global Offices:** Detailed address cards for **Bengaluru HQ**, **Kochi Office**, and **Nairobi Office**.
-
-### 3. Contact & Booking Enquiry Page (`/contact`)
-* **Interactive Booking Form:**
-  * `Full Name` (required)
-  * `Country Code` dropdown (`+91`, `+1`, `+44`, `+61`, `+254`, `+971`)
-  * `Contact Number` (required, 7-15 digits format)
-  * `Email Address` (required, valid email regex format)
-  * `Date of Travel` (required, **future date validation**)
-  * `Number of People` (required, min 1)
-  * `Hotel Category` (`Standard`, `Deluxe`, `Luxury`)
-  * `Number of Children` (optional, min 0)
-* **Form UX States:**
-  * Inline validation error messages under invalid inputs.
-  * Disabled submit button with loading spinner (`[Submitting...]`).
-  * Styled green confirmation card UI upon success (no browser `alert()`).
-  * Styled red error alert on server/network failure.
 
 ---
 
@@ -126,23 +111,17 @@ Submits and validates a travel booking enquiry, persisting it into MongoDB.
 }
 ```
 
-* **Validation Error Response (`400 Bad Request`):**
-```json
-{
-  "success": false,
-  "message": "Travel date must be a valid future date"
-}
-```
+### `GET /api/admin/destinations`
+Fetches all live website destination packages from MongoDB.
 
-### `GET /api/enquiry`
-Retrieves list of all submitted travel enquiries.
+### `POST /api/admin/destinations`
+Adds a new destination package live to the website catalog.
 
----
+### `PUT /api/admin/destinations`
+Updates existing destination package pricing, duration, or details.
 
-## Phase 2 — Future Scope
-
-1. **AI Travel Chatbot Widget:** Conversational AI using Gemini/OpenAI to generate custom day-by-day itineraries tailored to budget & preferences.
-2. **Admin Lead Dashboard:** Authenticated portal for travel managers to filter, view, and update enquiry conversion statuses (*New*, *Contacted*, *Converted*, *Closed*).
+### `DELETE /api/admin/destinations?id={id}`
+Deletes a destination package from the website catalog.
 
 ---
 
