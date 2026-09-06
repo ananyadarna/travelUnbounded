@@ -38,9 +38,14 @@ export default function AdminDashboardPage() {
   });
 
   useEffect(() => {
+    // Auth check: if not authenticated, redirect to /admin/login
+    if (!document.cookie.includes('admin_token=authenticated')) {
+      router.push('/admin/login');
+      return;
+    }
     fetchLeads();
     fetchDestinations();
-  }, []);
+  }, [router]);
 
   const fetchLeads = async () => {
     setLoadingLeads(true);
