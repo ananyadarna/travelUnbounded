@@ -2,13 +2,20 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Bot, X, Sparkles, Send, Compass, Calendar, Users, DollarSign, ArrowRight, ExternalLink, RefreshCw, CheckCircle2 } from 'lucide-react';
 
 export default function AIChatbotWidget() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [generatedItinerary, setGeneratedItinerary] = useState(null);
+
+  // Hide AI Chatbot Widget on Admin pages
+  if (pathname && pathname.startsWith('/admin')) {
+    return null;
+  }
 
   // User preference state
   const [preferences, setPreferences] = useState({
