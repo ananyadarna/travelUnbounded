@@ -116,7 +116,7 @@ export default function AIChatbotWidget() {
             {step === 1 && (
               <div className="space-y-4">
                 <div className="bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 text-xs text-slate-300 leading-relaxed">
-                  👋 <strong>Hello traveler!</strong> Where would you like to plan your custom journey?
+                  <strong>Hello traveler!</strong> Where would you like to plan your custom journey?
                 </div>
 
                 <div className="space-y-2">
@@ -134,7 +134,7 @@ export default function AIChatbotWidget() {
                             : 'bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700'
                         }`}
                       >
-                        {type === 'India' ? '🇮🇳 Incredible India' : '🌍 World Expeditions'}
+                        {type === 'India' ? 'Incredible India' : 'World Expeditions'}
                       </button>
                     ))}
                   </div>

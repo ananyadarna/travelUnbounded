@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Itinerary from '@/models/Itinerary';
 
-// Smart fallback itinerary generator when AI API key is unconfigured
+// Smart itinerary generator
 function generateFallbackItinerary(prefs) {
   const { destinationType, travelStyle, budgetCategory, durationDays = 5, adults = 2, children = 0 } = prefs;
 
@@ -14,7 +14,6 @@ function generateFallbackItinerary(prefs) {
     ? (isSafari ? 'Bandhavgarh & Kanha Tiger Reserve' : (isBackwaters ? 'Kerala Backwaters & Munnar' : 'Ladakh & Pangong Tso'))
     : (isSafari ? 'Masai Mara & Serengeti Safari' : 'Vietnam & Ha Long Bay Cruise');
 
-  let currencySymbol = isIndia ? '₹' : '$';
   let baseCostPerDay = budgetCategory === 'Luxury' ? 18000 : (budgetCategory === 'Budget' ? 6500 : 11500);
   let totalCost = baseCostPerDay * durationDays * adults;
 
@@ -83,48 +82,7 @@ export async function POST(request) {
     const body = await request.json();
     const { destinationType, travelStyle, budgetCategory, durationDays, adults, children } = body;
 
-    let itineraryData = null;
-
-    // Optional Gemini AI integration if key is present
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (apiKey) {
-      try {
-        const { GoogleGenAI } = await import('@google/genai');
-        const ai = new GoogleGenAI({ apiKey });
-        const prompt = `Create a custom ${durationDays}-day travel itinerary for ${destinationType} tailored for ${adults} adults and ${children} kids with budget ${budgetCategory} and style ${travelStyle}. Return ONLY valid JSON format:
-        {
-          "title": "Short title",
-          "destination": "Location name",
-          "summary": "Brief summary",
-          "estimatedCost": "Total price with currency",
-          "stayCategory": "Hotel category",
-          "dayWisePlan": [
-            {
-              "day": 1,
-              "title": "Day 1 title",
-              "morning": "Morning activity",
-              "afternoon": "Afternoon activity",
-              "evening": "Evening activity",
-              "highlight": "Day highlight"
-            }
-          ]
-        }`;
-
-        const response = await ai.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: prompt,
-        });
-
-        const rawText = response.text;
-        const cleanedJson = rawText.replace(/```json|```/g, '').trim();
-        itineraryData = JSON.parse(cleanedJson);
-      } catch (aiErr) {
-        console.warn('Gemini AI fallback triggered:', aiErr.message);
-        itineraryData = generateFallbackItinerary(body);
-      }
-    } else {
-      itineraryData = generateFallbackItinerary(body);
-    }
+    const itineraryData = generateFallbackItinerary(body);
 
     // Save itinerary to MongoDB
     await connectDB();

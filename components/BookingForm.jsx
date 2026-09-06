@@ -219,12 +219,12 @@ export default function BookingForm() {
               onChange={handleChange}
               className="px-3 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm font-semibold text-slate-700 outline-none focus:border-teal-600"
             >
-              <option value="+91">🇮🇳 +91 (India)</option>
-              <option value="+1">🇺🇸 +1 (USA/Canada)</option>
-              <option value="+44">🇬🇧 +44 (UK)</option>
-              <option value="+61">🇦🇺 +61 (Australia)</option>
-              <option value="+254">🇰🇪 +254 (Kenya)</option>
-              <option value="+971">🇦🇪 +971 (UAE)</option>
+              <option value="+91">+91 (India)</option>
+              <option value="+1">+1 (USA/Canada)</option>
+              <option value="+44">+44 (UK)</option>
+              <option value="+61">+61 (Australia)</option>
+              <option value="+254">+254 (Kenya)</option>
+              <option value="+971">+971 (UAE)</option>
             </select>
 
             <input
